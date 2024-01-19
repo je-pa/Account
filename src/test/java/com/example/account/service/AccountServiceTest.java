@@ -6,6 +6,7 @@ import com.example.account.repository.AccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,8 +40,33 @@ class AccountServiceTest {
         Account account = accountService.getAccount(4555L);
 
         // then
+        // verify
+        verify(accountRepository, times(1)).findById(anyLong());
+        verify(accountRepository, times(0)).save(any());
+
         assertEquals("65789", account.getAccountNumber());
         assertEquals(AccountStatus.UNREGISTERED, account.getAccountStatus());
+
+        // ArgumentCaptor 사용
+        ArgumentCaptor<Long> captor = ArgumentCaptor.forClass(Long.class);
+
+        verify(accountRepository, times(1)).findById(captor.capture());
+        assertEquals(4555L, captor.getValue());
+        assertNotEquals(45551L, captor.getValue());
+        assertTrue(4555L == captor.getValue());
+    }
+
+    @Test
+    @DisplayName("계좌 조회 실패 - 음수 조회")
+    void testFailedToSearchAccount(){
+        // given
+        // when
+        RuntimeException runtimeException = assertThrows(RuntimeException.class,
+                () -> accountService.getAccount(-10L));
+
+        // then
+        // verify
+        assertEquals("Minus", runtimeException.getMessage());
     }
 
     @Test

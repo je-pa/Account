@@ -22,6 +22,9 @@ public class AccountService {
     }
     @Transactional
     public Account getAccount(Long id){
+        if(id<0){
+            throw new RuntimeException("Minus");
+        }
         return accountRepository.findById(id).get(); // Optional<T>에서 값을 꺼내는 것은 일반적이지 않아서 경고뜨긴함
     }
 
