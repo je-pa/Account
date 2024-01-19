@@ -28,7 +28,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.redisson/redisson
     implementation group: 'org.redisson', name: 'redisson', version: '3.26.0'
     // https://mvnrepository.com/artifact/it.ozimov/embedded-redis
-    testImplementation group: 'it.ozimov', name: 'embedded-redis', version: '0.7.3'
+    implementation('it.ozimov:embedded-redis:0.7.3'){
+      exclude group: "org.slf4j", module: "slf4j-simple"
+    }
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
