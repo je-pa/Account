@@ -14,12 +14,14 @@ public class AccountController {
     private final AccountService accountService;
     private final RedisTestService redisTestService;
 
-    @PostMapping("/create-account")
+    @PostMapping("/account")
     public CreateAccount.Response createAccount(
             @RequestBody @Valid CreateAccount.Request request){
-        accountService.createAccount(request.getUserId()
-                , request.getInitialBalance());
-        return "success";
+        return CreateAccount.Response.form(
+                accountService.createAccount(
+                        request.getUserId()
+                        , request.getInitialBalance())
+        );
     }
 
     @GetMapping("/get-lock")
