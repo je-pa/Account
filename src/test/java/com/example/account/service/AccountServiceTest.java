@@ -25,8 +25,81 @@ class AccountServiceTest {
     @Mock
     private AccountRepository accountRepository;
 
+    @Mock
+    private AccountUserRepository accountUserRepository;
+
     @InjectMocks
     private AccountService accountService;
+
+    @Test
+    void createAccountSuccess(){
+        // given
+        AccountUser user = AccountUser.builder()
+                .id(12L)
+                .name("Pobi").build();
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(user));
+        given(accountRepository.findFirstByOrderByIdDesc())
+                .willReturn(Optional.of(Account.builder()
+                        .accountNumber("438241200").build()));
+        given(accountRepository.save(any()))
+                .willReturn(Account.builder()
+                        .accountUser(user)
+                        .accountNumber("2").build());
+
+        ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
+        // when
+        AccountDto accountDto = accountService.createAccount(1L, 1000L);
+        // then
+        verify(accountRepository,times(1)).save(captor.capture());
+
+        assertEquals(12L, accountDto.getUserId());
+        assertEquals("2", accountDto.getAccountNumber());
+        assertEquals("438241201", captor.getValue().getAccountNumber());
+    }
+
+    @Test
+    void createFirstAccountSuccess(){
+        // given
+        AccountUser user = AccountUser.builder()
+                .id(15L)
+                .name("Pobi").build();
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(user));
+        given(accountRepository.findFirstByOrderByIdDesc())
+                .willReturn(Optional.empty()); // 없는 경우
+        given(accountRepository.save(any()))
+                .willReturn(Account.builder()
+                        .accountUser(user)
+                        .accountNumber("2").build());
+
+        ArgumentCaptor<Account> captor = ArgumentCaptor.forClass(Account.class);
+        // when
+        AccountDto accountDto = accountService.createAccount(1L, 1000L);
+        // then
+        verify(accountRepository,times(1)).save(captor.capture());
+
+        assertEquals(15L, accountDto.getUserId());
+        assertEquals("2", accountDto.getAccountNumber());
+        assertEquals("1000000000", captor.getValue().getAccountNumber());
+    }
+
+    @Test
+    @DisplayName("해당 유저 없음 - 계죄 생성 실패")
+    void createAccount_userNotFound(){
+        // given
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.empty());
+
+        // when
+        AccountException accountException = assertThrows(AccountException.class,
+                () -> accountService.createAccount(1L, 1000L));
+        // then
+
+        assertEquals(ErrorCode.USER_NOT_FOUNT, accountException.getErrorCode());
+    }
+
+
 
     @Test
     @DisplayName("계좌 조회 성공")
