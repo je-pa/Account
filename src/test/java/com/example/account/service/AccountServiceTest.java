@@ -1,8 +1,13 @@
 package com.example.account.service;
 
 import com.example.account.domain.Account;
+import com.example.account.domain.AccountUser;
+import com.example.account.dto.AccountDto;
+import com.example.account.exception.AccountException;
+import com.example.account.repository.AccountUserRepository;
 import com.example.type.AccountStatus;
 import com.example.account.repository.AccountRepository;
+import com.example.type.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -99,7 +104,25 @@ class AccountServiceTest {
         assertEquals(ErrorCode.USER_NOT_FOUNT, accountException.getErrorCode());
     }
 
+    @Test
+    @DisplayName("유저당 최대 계좌 10개")
+    void createAccount_maxAccountIs10(){
+        // given
+        AccountUser user = AccountUser.builder()
+                .id(15L)
+                .name("Pobi").build();
+        given(accountUserRepository.findById(anyLong()))
+                .willReturn(Optional.of(user));
+        given(accountRepository.countByAccountUser(any()))
+                .willReturn(10);
 
+        // when
+        AccountException accountException = assertThrows(AccountException.class,
+                () -> accountService.createAccount(1L, 1000L));
+
+        // then
+        assertEquals(ErrorCode.MAX_ACCOUNT_PER_USER_10, accountException.getErrorCode());
+    }
 
     @Test
     @DisplayName("계좌 조회 성공")
