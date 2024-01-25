@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 public class AccountDto {
     private Long userId;
     private String accountNumber;
-    private Long valance;
+    private Long balance;
 
     private LocalDateTime registeredAt;
     private LocalDateTime unRegisteredAt;
@@ -22,6 +22,7 @@ public class AccountDto {
         return AccountDto.builder()
                 .userId(account.getAccountUser().getId())
                 .accountNumber(account.getAccountNumber())
+                .balance(account.getBalance())
                 .registeredAt(account.getRegisteredAt())
                 .unRegisteredAt(account.getUnRegisteredAt())
                 .build();
