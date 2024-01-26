@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static com.example.type.AccountStatus.IN_USE;
-import static com.example.type.AccountStatus.UNREGISTERED;
-import static com.example.type.ErrorCode.*;
+import static com.example.account.type.AccountStatus.IN_USE;
+import static com.example.account.type.AccountStatus.UNREGISTERED;
+import static com.example.account.type.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
