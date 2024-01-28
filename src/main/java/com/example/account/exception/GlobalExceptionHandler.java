@@ -19,8 +19,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ErrorResponse handleMethodArgumentNotValidException(AccountException e){
-        log.error("MethodArgumentNotValidException is occurred.", e.getErrorCode());
+    public ErrorResponse handleMethodArgumentNotValidException(MethodArgumentNotValidException e){
+        log.error("MethodArgumentNotValidException is occurred.", e);
 
         return new ErrorResponse(ErrorCode.INVALID_REQUEST,ErrorCode.INVALID_REQUEST.getDescription());
     }
