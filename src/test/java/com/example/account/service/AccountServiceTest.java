@@ -108,7 +108,7 @@ class AccountServiceTest {
                 () -> accountService.createAccount(1L, 1000L));
         // then
 
-        assertEquals(ErrorCode.USER_NOT_FOUNT, accountException.getErrorCode());
+        assertEquals(ErrorCode.USER_NOT_FOUND, accountException.getErrorCode());
     }
 
     @Test
@@ -166,7 +166,7 @@ class AccountServiceTest {
                 () -> accountService.deleteAccount(1L, "1234567890"));
         // then
 
-        assertEquals(ErrorCode.USER_NOT_FOUNT, accountException.getErrorCode());
+        assertEquals(ErrorCode.USER_NOT_FOUND, accountException.getErrorCode());
     }
     @Test
     @DisplayName("해당 계좌 없음 - 계죄 해지 실패")
@@ -185,7 +185,7 @@ class AccountServiceTest {
                 () -> accountService.deleteAccount(1L, "1234567890"));
         // then
 
-        assertEquals(ErrorCode.ACCOUNT_NOT_FOUNT, accountException.getErrorCode());
+        assertEquals(ErrorCode.ACCOUNT_NOT_FOUND, accountException.getErrorCode());
     }
 
     @Test
@@ -311,7 +311,7 @@ class AccountServiceTest {
                 () -> accountService.getAccountByUserId(1L));
         // then
 
-        assertEquals(ErrorCode.USER_NOT_FOUNT, accountException.getErrorCode());
+        assertEquals(ErrorCode.USER_NOT_FOUND, accountException.getErrorCode());
     }
     @Test
     @DisplayName("계좌 조회 성공")

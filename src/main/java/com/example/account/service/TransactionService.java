@@ -31,14 +31,13 @@ public class TransactionService {
     @Transactional
     public TransactionDto useBalance(Long userId, String accountNumber, Long amount){
         AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUNT));
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(()-> new AccountException(ErrorCode.ACCOUNT_NOT_FOUNT));
+                .orElseThrow(() -> new AccountException(ErrorCode.USER_NOT_FOUND));
+        Account account = getAccount(accountNumber);
         validateUseBalance(accountUser, account, amount);
 
         account.useBalance(amount);
 
-        return TransactionDto.fromEntity(saveAndGetTransaction(TransactionResultType.S, amount, account));
+        return TransactionDto.fromEntity(saveAndGetTransaction(TransactionType.USE,TransactionResultType.S, amount, account));
     }
 
     private void validateUseBalance(AccountUser accountUser, Account account, Long amount) {
@@ -55,15 +54,24 @@ public class TransactionService {
 
     @Transactional
     public void saveFailedUseTransaction(String accountNumber, Long amount) {
-        Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(() -> new AccountException(ErrorCode.AMOUNT_EXCEED_BALANCE));
-        saveAndGetTransaction(TransactionResultType.F, amount, account);
+        Account account = getAccount(accountNumber);
+        saveAndGetTransaction(TransactionType.USE, TransactionResultType.F, amount, account);
     }
 
-    private Transaction saveAndGetTransaction(TransactionResultType transactionResultType, Long amount, Account account) {
+    private Account getAccount(String accountNumber) {
+        Account account = accountRepository.findByAccountNumber(accountNumber)
+                .orElseThrow(() -> new AccountException(ErrorCode.ACCOUNT_NOT_FOUND));
+        return account;
+    }
+
+    private Transaction saveAndGetTransaction(
+            TransactionType transactionType
+            , TransactionResultType transactionResultType
+            , Long amount
+            , Account account) {
         return transactionRepository.save(
                 Transaction.builder()
-                        .transactionType(TransactionType.USE)
+                        .transactionType(transactionType)
                         .transactionResultType(transactionResultType)
                         .account(account)
                         .amount(amount)
@@ -72,5 +80,37 @@ public class TransactionService {
                         .transactionAt(LocalDateTime.now())
                         .build()
         );
+    }
+
+    public TransactionDto cancelBalance(String transactionId, String accountNumber, Long amount) {
+        Transaction transaction = transactionRepository.findByTransactionId(transactionId)
+                .orElseThrow(()-> new AccountException(ErrorCode.TRANSACTION_NOT_FOUND));
+        Account account = getAccount(accountNumber);
+
+        validateCancelBalance(transaction, account, amount);
+
+        account.useBalance(amount);
+
+        return TransactionDto.fromEntity(
+                saveAndGetTransaction(TransactionType.CANCEL, TransactionResultType.S, amount, account)
+                );
+
+    }
+
+    private void validateCancelBalance(Transaction transaction, Account account, Long amount) {
+        if(!Objects.equals(transaction.getAccount().getId(), account.getId())){
+            throw new AccountException(ErrorCode.TRANSACTION_ACCOUNT_UN_MATCH);
+        }
+        if(!Objects.equals(transaction.getAmount(), amount)){
+            throw new AccountException(ErrorCode.CANCEL_MUST_FULLY);
+        }
+        if(transaction.getTransactionAt().isBefore(LocalDateTime.now().minusYears(1))){
+            throw new AccountException(ErrorCode.TOO_OLD_ORDER_TO_CANCEL);
+        }
+    }
+
+    public void saveFailedCancelTransaction(String accountNumber, Long amount) {
+        Account account = getAccount(accountNumber);
+        saveAndGetTransaction(TransactionType.CANCEL, TransactionResultType.F, amount, account);
     }
 }

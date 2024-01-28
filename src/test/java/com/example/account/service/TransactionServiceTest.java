@@ -93,7 +93,7 @@ class TransactionServiceTest {
                 () -> transactionService.useBalance(1L, "1234567890",1000L));
         // then
 
-        assertEquals(ErrorCode.USER_NOT_FOUNT, accountException.getErrorCode());
+        assertEquals(ErrorCode.USER_NOT_FOUND, accountException.getErrorCode());
     }
 
     @Test
@@ -113,7 +113,7 @@ class TransactionServiceTest {
                 () -> transactionService.useBalance(1L, "1234567890",1000L));
         // then
 
-        assertEquals(ErrorCode.ACCOUNT_NOT_FOUNT, accountException.getErrorCode());
+        assertEquals(ErrorCode.ACCOUNT_NOT_FOUND, accountException.getErrorCode());
     }
 
     @Test

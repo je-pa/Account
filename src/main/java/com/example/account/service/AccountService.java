@@ -54,7 +54,7 @@ public class AccountService {
 
     private AccountUser getAccountUser(Long userId) {
         AccountUser accountUser = accountUserRepository.findById(userId)
-                .orElseThrow(() -> new AccountException(USER_NOT_FOUNT));
+                .orElseThrow(() -> new AccountException(USER_NOT_FOUND));
         return accountUser;
     }
 
@@ -78,7 +78,7 @@ public class AccountService {
         AccountUser accountUser = getAccountUser(userId);
 
         Account account = accountRepository.findByAccountNumber(accountNumber)
-                .orElseThrow(()-> new AccountException(ACCOUNT_NOT_FOUNT));
+                .orElseThrow(()-> new AccountException(ACCOUNT_NOT_FOUND));
 
         validateDeleteAccount(accountUser, account);
 
