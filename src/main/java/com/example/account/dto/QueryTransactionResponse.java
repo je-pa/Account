@@ -2,12 +2,14 @@ package com.example.account.dto;
 
 import com.example.account.type.TransactionResultType;
 import com.example.account.type.TransactionType;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder

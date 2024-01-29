@@ -1,10 +1,12 @@
 package com.example.account.dto;
 
 import com.example.account.type.ErrorCode;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

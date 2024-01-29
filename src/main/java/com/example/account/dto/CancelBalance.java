@@ -3,13 +3,15 @@ package com.example.account.dto;
 import com.example.account.aop.AccountLockIdInterface;
 import com.example.account.type.TransactionResultType;
 import jakarta.validation.constraints.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 public class CancelBalance {
     @Getter
-    @Setter
     @AllArgsConstructor
     public static class Request implements AccountLockIdInterface {
 
@@ -28,7 +30,6 @@ public class CancelBalance {
 
     }
     @Getter
-    @Setter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
