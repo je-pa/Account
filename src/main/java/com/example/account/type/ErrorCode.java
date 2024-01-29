@@ -21,5 +21,5 @@ public enum ErrorCode {
     BALANCE_NOT_EMPTY("잔액이 있는 계좌는 해지할 수 없습니다."),
     MAX_ACCOUNT_PER_USER_10("사용자 최대 계좌는 10개");
 
-    private String description;
+    private final String description;
 }
