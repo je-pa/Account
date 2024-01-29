@@ -137,7 +137,7 @@ class TransactionServiceTest {
                         .accountNumber("438241200").build()));
         // when
         AccountException accountException = assertThrows(AccountException.class,
-                () -> transactionService.useBalance(1L, "1234567890",1000L));;
+                () -> transactionService.useBalance(1L, "1234567890",1000L));
         // then
 
         assertEquals(ErrorCode.USER_ACCOUNT_UN_MATCH, accountException.getErrorCode());
@@ -160,7 +160,7 @@ class TransactionServiceTest {
                         .accountNumber("438241200").build()));
         // when
         AccountException accountException = assertThrows(AccountException.class,
-                () -> transactionService.useBalance(1L, "1234567890",1000L));;
+                () -> transactionService.useBalance(1L, "1234567890",1000L));
         // then
 
         assertEquals(ErrorCode.ACCOUNT_ALREADY_UNREGISTERED, accountException.getErrorCode());
@@ -186,7 +186,7 @@ class TransactionServiceTest {
         // when
         // then
         AccountException accountException = assertThrows(AccountException.class,
-                () -> transactionService.useBalance(1L, "1234567890",1000L));;
+                () -> transactionService.useBalance(1L, "1234567890",1000L));
 
         assertEquals(ErrorCode.AMOUNT_EXCEED_BALANCE, accountException.getErrorCode());
         verify(transactionRepository, times(0)).save(any());
@@ -278,9 +278,6 @@ class TransactionServiceTest {
     @DisplayName("해당 계좌 없음 - 잔액 사용 취소 실패")
     void cancelBalance_AccountNotFound(){
         // given
-        AccountUser user = AccountUser.builder()
-                .id(12L)
-                .name("Pobi").build();
         given(transactionRepository.findByTransactionId(anyString()))
                 .willReturn(Optional.of(Transaction.builder().build()));
         given(accountRepository.findByAccountNumber(anyString()))
